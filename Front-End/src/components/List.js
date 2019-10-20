@@ -10,7 +10,7 @@ export default class List extends Component {
         {/* <h6>List</h6> */}
       {
         todos.map((todo,index)=>{
-          return (<Item key={todo.id} todo={todo} rahrah={deldel} toggleChild={toggle}/>)
+          return (<Item key={todo._id} todo={todo} rahrah={deldel} toggleChild={toggle}/>)
         })
       }
        

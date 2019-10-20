@@ -5,51 +5,65 @@ import Add from './components/Add';
 
 class App extends React.Component {
   state = {
-    moath: 1,
-    colorText: 'red',
-    todos: [
-      {
-        id: 1,
-        title: 'eat pizza',
-        isCompleted: true
-      },
-      {
-        id: 2,
-        title: 'eat sban5',
-        isCompleted: false
-      },
-      {
-        id: 3,
-        title: 'say aseeeeeem',
-        isCompleted: false
-      }
-    ]
+    todos: [ ]
   };
+
+componentDidMount(){
+  this.getRequest();
+}
+
+
   edit = ID => {
-    // console.log('this:', ID);
-    console.log('called Edit Function From App Comp', ID);
-    // dont use this.state=value
-    let newState = this.state.todos.map((elem, i) => {
-      if (ID === elem.id) {
-        elem.isCompleted = !elem.isCompleted;
-      }
-      return elem;
+    // // console.log('this:', ID);
+    // console.log('called Edit Function From App Comp', ID);
+    // // dont use this.state=value
+    // let newState = this.state.todos.map((elem, i) => {
+    //   if (ID === elem.id) {
+    //     elem.isCompleted = !elem.isCompleted;
+    //   }
+    //   return elem;
+    // });
+    // this.setState({ todos: newState });
+
+    axios.put(`http://localhost:9000/edit/${ID}`)
+    .then(r => {
+      // handle success
+      console.log(r.data);
+      this.setState({ todos: r.data });
+    })
+    .catch(error => {
+      // handle error
+      console.log(error);
     });
-    this.setState({ todos: newState });
+
+
+
   };
 
   deleteItem = ID => {
     console.log('id', ID);
-    let newState = this.state.todos.filter((elem, i) => {
-      // return false
-      return ID !== elem.id;
+    // let newState = this.state.todos.filter((elem, i) => {
+    //   // return false
+    //   return ID !== elem.id;
+    // });
+    // this.setState({ todos: newState });
+
+    axios.delete(`http://localhost:9000/delete/${ID}`)
+    .then(r => {
+      // handle success
+      console.log(r.data);
+      this.setState({ todos: r.data });
+    })
+    .catch(error => {
+      // handle error
+      console.log(error);
     });
-    this.setState({ todos: newState });
+
+
   };
   getRequest = () => {
     console.log('get request called');
-    axios
-      .get('http://localhost:9000/data')
+    axios.get('http://localhost:9000/data')
       .then(r => {
         // handle success
         console.log(r.data);
@@ -63,9 +77,22 @@ class App extends React.Component {
 
   // item like {id:77, title : "eat" , isCompleted : false}
   addItem = item => {
-    let newState = this.state.todos;
-    newState.push(item);
-    this.setState({ todos: newState });
+    // let newState = this.state.todos;
+    // newState.push(item);
+    // this.setState({ todos: newState });
+  
+    axios.post('http://localhost:9000/addNewTask', item)
+      .then(r => {
+        // handle success
+        console.log(r.data);
+        this.setState({ todos: r.data });
+      })
+      .catch(error => {
+        // handle error
+        console.log(error);
+      });
+  
+  
   };
 
   render() {

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/toDoList16-10', {
+mongoose.connect('mongodb://localhost/toDoList', {
   useNewUrlParser: true
 });
 const db = mongoose.connection;
@@ -7,17 +7,22 @@ db.on('error', function() {
   console.log('mongoose connection error');
   console.log('____________________________');
 });
+
 db.once('open', function() {
   console.log('mongoose connected successfully');
   console.log('____________________________');
 });
+
+
 let tasksSchema = new mongoose.Schema({
   title: String,
   isCompleted: Boolean
 });
+
 let Tasks = mongoose.model('tasks', tasksSchema);
+
 let getTasks = cb => {
-  console.log('GET TASKS FROM DATABASE');
+  // console.log('GET TASKS FROM DATABASE');
   Tasks.find({}, function(err, docs) {
     if (err) {
       console.log('ERR:', err);
@@ -30,10 +35,8 @@ let getTasks = cb => {
 let insertTask = (cb, obj) => {
   console.log('OBJ:', obj);
   console.log('INSERT TASK TO DATABASE');
-  Tasks.insertMany([{ title: obj.title, isCompleted: false }], function(
-    err,
-    NewTask
-  ) {
+  Tasks.insertMany([{ title: obj.title, isCompleted: false }], 
+    function( err, NewTask) {
     if (err) {
       console.log('ERR:', err);
     }
@@ -43,10 +46,42 @@ let insertTask = (cb, obj) => {
 };
 
 let removeOne = (cb, ID) => {
-  cb('DATABASE AFTER REMOVE');
+  // cb('DATABASE AFTER REMOVE');
+  Tasks.deleteOne({_id : ID},( err, DeletedTask)=> {
+    if (err) {
+      console.log('ERR:', err);
+    }
+    console.log('NEWTASK:', DeletedTask);
+    getTasks(cb);
+  });
 };
+
+
+let editItem = (cb, ID) => {
+
+  Tasks.findOne({_id : ID} , (err , docs) => {
+    if (err){
+      console.log('Err :' , err)
+    }
+    else {
+      Tasks.updateOne({_id : ID}, {$set : {isCompleted : !docs.isCompleted}}
+,(err , docs) => {
+  if(err){
+    console.log('Err:' ,err)
+  }
+  console.log('Update Task', docs);
+  getTasks(cb);
+  })
+
+};
+
+
+
+
 module.exports = {
-  abeer: getTasks,
+  get : getTasks,
   insert: insertTask,
-  remove: removeOne
+  remove: removeOne,
+
+  edit : editItem
 };

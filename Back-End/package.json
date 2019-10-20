@@ -5,16 +5,19 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+    , "start": "nodemon server.js "
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "init": "^0.1.2",
     "mongoose": "^5.7.5",
     "node": "^12.12.0"
   },
   "devDependencies": {
-    "nodemon": "^1.19.3"
+    "nodemon": "^1.19.4"
   }
 }

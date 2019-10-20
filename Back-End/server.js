@@ -13,27 +13,45 @@ app.use(function(req, res, next) {
 });
 app.use(express.json());
 
+
+
 app.get('/data', (req, res) => {
-  DB.abeer(baba => {
+  DB.get(getFromDB => {
     console.log('CALL BACK FROM SERVER');
-    res.json(baba);
+    res.json(getFromDB);
   });
 });
+
+
+
 
 app.post('/addNewTask', (req, res) => {
   let box = req.body;
   console.log('BOX:', box);
-  DB.insert(baba => {
+  DB.insert(insertIntoDB => {
     console.log('CALL BACK FROM SERVER');
-    res.json(baba);
+    res.json(insertIntoDB);
   }, box);
 });
+
+
 
 app.delete('/delete/:id', (req, res) => {
   DB.remove(result => {
     res.json(result);
-  }, req.params.id);
+  }, req.params.id );
+
+
 });
 
+
+app.put('/edit/:id', (req, res) => {
+  DB.edit(result => {
+    res.json(result);
+  }, req.params.id );
+
+
+});
+ 
 const PORT = 9000;
 app.listen(PORT, () => console.log(`Server listening to ${PORT}`));
